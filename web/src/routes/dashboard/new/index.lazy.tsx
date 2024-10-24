@@ -1,5 +1,18 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
+import { AppSidebar } from '@/components/app-sidebar'
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 
 export const Route = createLazyFileRoute('/dashboard/new/')({
-  component: () => <div>Hello /dashboard/new/!</div>,
+  component: Page,
 })
+
+function Page() {
+  return (
+<SidebarProvider>
+      <AppSidebar />
+      <main>
+        <SidebarTrigger />
+      </main>
+    </SidebarProvider>
+  )
+}

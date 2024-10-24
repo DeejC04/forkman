@@ -18,6 +18,7 @@ import { Route as rootRoute } from './routes/__root'
 
 const IndexLazyImport = createFileRoute('/')()
 const DashboardIndexLazyImport = createFileRoute('/dashboard/')()
+const DashboardNewIndexLazyImport = createFileRoute('/dashboard/new/')()
 
 // Create/Update Routes
 
@@ -31,6 +32,13 @@ const DashboardIndexLazyRoute = DashboardIndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
   import('./routes/dashboard/index.lazy').then((d) => d.Route),
+)
+
+const DashboardNewIndexLazyRoute = DashboardNewIndexLazyImport.update({
+  path: '/dashboard/new/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/dashboard/new/index.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -51,6 +59,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/dashboard/new/': {
+      id: '/dashboard/new/'
+      path: '/dashboard/new'
+      fullPath: '/dashboard/new'
+      preLoaderRoute: typeof DashboardNewIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -59,36 +74,41 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/dashboard': typeof DashboardIndexLazyRoute
+  '/dashboard/new': typeof DashboardNewIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/dashboard': typeof DashboardIndexLazyRoute
+  '/dashboard/new': typeof DashboardNewIndexLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/dashboard/': typeof DashboardIndexLazyRoute
+  '/dashboard/new/': typeof DashboardNewIndexLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard'
+  fullPaths: '/' | '/dashboard' | '/dashboard/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard'
-  id: '__root__' | '/' | '/dashboard/'
+  to: '/' | '/dashboard' | '/dashboard/new'
+  id: '__root__' | '/' | '/dashboard/' | '/dashboard/new/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   DashboardIndexLazyRoute: typeof DashboardIndexLazyRoute
+  DashboardNewIndexLazyRoute: typeof DashboardNewIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   DashboardIndexLazyRoute: DashboardIndexLazyRoute,
+  DashboardNewIndexLazyRoute: DashboardNewIndexLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -104,7 +124,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/dashboard/"
+        "/dashboard/",
+        "/dashboard/new/"
       ]
     },
     "/": {
@@ -112,6 +133,9 @@ export const routeTree = rootRoute
     },
     "/dashboard/": {
       "filePath": "dashboard/index.lazy.tsx"
+    },
+    "/dashboard/new/": {
+      "filePath": "dashboard/new/index.lazy.tsx"
     }
   }
 }
